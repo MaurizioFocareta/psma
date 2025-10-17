@@ -1676,10 +1676,14 @@ namespace Granfeldt
                                                 var keyvalue = trimmedKvLine.Substring(pipeIndex + 1);
 
                                                 var equalIndex = keyvalue.IndexOf('=');
-                                                if (equalIndex > 0 && equalIndex < keyvalue.Length - 1)
+                                                if (equalIndex > 0)
                                                 {
                                                     string key = keyvalue.Substring(0, equalIndex);
-                                                    string value = keyvalue.Substring(equalIndex + 1);
+                                                    string value = null;
+                                                    if (equalIndex < keyvalue.Length - 1)
+                                                    {
+                                                        value = keyvalue.Substring(equalIndex + 1);
+                                                    }
 
                                                     hashTable[key] = ConvertFromJSONString(value, propertyType);
                                                     propertyCount++;
@@ -2984,6 +2988,9 @@ namespace Granfeldt
 
         private object ConvertFromJSONString(string jsonString, string typeName)
         {
+            if (jsonString == null)
+                return null;
+
             Type targetType = Type.GetType(typeName);
 
             var serializer = new DataContractJsonSerializer(targetType);
